@@ -8,14 +8,15 @@ import org.openqa.selenium.WebElement;
 public class MainPage extends BasePage {
 
     //кнопка "Заказать" вверху страницы
-    private By makeOrderButtonUp = By.className("Button_Button__ra12g");
+    private String makeOrderButtonUp = ".//div[@class = 'Header_Nav__AGCXC']/button[@class = 'Button_Button__ra12g']";
     //кнопка "Заказать" внизу страницы
-    private By makeOrderButtonDown = By.className("Button_Middle__1CSJM");
+    private String makeOrderButtonDown = ".//button[@class = 'Button_Middle__1CSJM']";
     //кнопка согласия использовать куки
+    private String acceptCookiesButton = ".//button[@id = 'rcc-confirm-button']";
 
     //Вопросы о важном
-    private String questionLink = ".//div[@id = 'accordion__heading-%d']"; //Вопрос
-    private String answerLink = ".//div[@id = 'accordion__panel-%d']/p"; //Ответ
+    private String questionLink = ".//div[@id = 'accordion__heading-%d']"; //Вопросы
+    private String answerLink = ".//div[@id = 'accordion__panel-%d']/p"; //Ответы
 
 
     public MainPage(WebDriver driver) {
@@ -31,12 +32,16 @@ public class MainPage extends BasePage {
 
     }
 
+    public void acceptCookies() {
+        driver.findElement(By.xpath(acceptCookiesButton)).click();
+    }
+
     public void clickMakeOrderButtonUp() {
-        driver.findElement(makeOrderButtonUp).click();
+        driver.findElement(By.xpath(makeOrderButtonUp)).click();
     }
 
     public void clickMakeOrderButtonDown() {
-        driver.findElement(makeOrderButtonDown).click();
+        driver.findElement(By.xpath(makeOrderButtonDown)).click();
     }
 
 
