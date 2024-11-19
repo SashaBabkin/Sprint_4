@@ -7,10 +7,7 @@ import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import pageObject.ConfirmOrderPage;
-import pageObject.MainPage;
-import pageObject.OrderPageAbout;
-import pageObject.OrderPageForWho;
+import ru.yandex.pageobjects.*;
 
 
 import static org.junit.Assert.assertEquals;
@@ -19,7 +16,6 @@ import static org.junit.Assert.assertEquals;
 public class OrderTest {
 
     WebDriver driver;
-
     String firstName;
     String lastName;
     String adress;
@@ -54,6 +50,11 @@ public class OrderTest {
     public void prepare() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
+        //Переход на сайт
+        driver.get(MainPage.URL);
+        //Принять cookie
+        MainPage mainPage = new MainPage(driver);
+        mainPage.acceptCookies();
 
 //        WebDriverManager.firefoxdriver().setup();
 //        driver = new FirefoxDriver();
@@ -61,24 +62,19 @@ public class OrderTest {
 
     // Точка входа - Кнопка Заказать вверху страницы
     @Test
-    public void orderTestWithButtonUp() {
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+    public void orderWithButtonUpTest() {
 
         MainPage mainPage = new MainPage(driver);
-        mainPage.acceptCookies();
-
-        OrderPageForWho orderPageForWho = new OrderPageForWho(driver);
+        OrderPages orderPages = new OrderPages(driver);
+        //Клик на кнопку Заказать вверху страницы
         mainPage.clickMakeOrderButtonUp();
-        // new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(".//input[@placeholder = '* Имя']"))));
-        orderPageForWho.fillOrderFormForWho(firstName, lastName, adress, metroStation, phoneNumber);
-        OrderPageAbout orderPageAbout = new OrderPageAbout(driver);
-        orderPageAbout.fillOrderFormAbout(dataOfDelivery, rentPeriod, comment);
-
-        ConfirmOrderPage confirmOrderPage = new ConfirmOrderPage(driver);
-        confirmOrderPage.pressConfirmOrderButton();
-
-        Boolean actualResult = confirmOrderPage.checkConfirmIsDisplayed();
-
+        //Заполняем форму заказа
+        orderPages.fillOrderFormForWho(firstName, lastName, adress, metroStation, phoneNumber);
+        orderPages.fillOrderFormAbout(dataOfDelivery, rentPeriod, comment);
+        //Клик на кнопку подтверждения заказа
+        orderPages.pressConfirmOrderButton();
+        //Результат
+        Boolean actualResult = orderPages.checkConfirmIsDisplayed();
         assertEquals("Ожидается окно подтверждения заказа", orderStatus, actualResult);
 
     }
@@ -86,24 +82,19 @@ public class OrderTest {
 
     // Точка входа - Кнопка Заказать внизу страницы
     @Test
-    public void orderTestWithButtonDown() {
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+    public void orderWithButtonDownTest() {
 
         MainPage mainPage = new MainPage(driver);
-        mainPage.acceptCookies();
-
-        OrderPageForWho orderPageForWho = new OrderPageForWho(driver);
+        OrderPages orderPages = new OrderPages(driver);
+        //Клик на кнопку Заказать вверху страницы
         mainPage.clickMakeOrderButtonDown();
-        // new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(".//input[@placeholder = '* Имя']"))));
-        orderPageForWho.fillOrderFormForWho(firstName, lastName, adress, metroStation, phoneNumber);
-        OrderPageAbout orderPageAbout = new OrderPageAbout(driver);
-        orderPageAbout.fillOrderFormAbout(dataOfDelivery, rentPeriod, comment);
-
-        ConfirmOrderPage confirmOrderPage = new ConfirmOrderPage(driver);
-        confirmOrderPage.pressConfirmOrderButton();
-
-        Boolean actualResult = confirmOrderPage.checkConfirmIsDisplayed();
-
+        //Заполняем форму заказа
+        orderPages.fillOrderFormForWho(firstName, lastName, adress, metroStation, phoneNumber);
+        orderPages.fillOrderFormAbout(dataOfDelivery, rentPeriod, comment);
+        //Клик на кнопку подтверждения заказа
+        orderPages.pressConfirmOrderButton();
+        //Результат
+        Boolean actualResult = orderPages.checkConfirmIsDisplayed();
         assertEquals("Ожидается окно подтверждения заказа", orderStatus, actualResult);
 
     }
@@ -112,6 +103,7 @@ public class OrderTest {
     @After
     public void tearDown() {
         driver.quit();
+
     }
 
 
